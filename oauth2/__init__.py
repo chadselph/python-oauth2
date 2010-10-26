@@ -39,7 +39,7 @@ except ImportError:
     from cgi import parse_qs
 
 
-VERSION = '1.0'  # Hi Blaine!
+VERSION = '1.0' 
 HTTP_METHOD = 'GET'
 SIGNATURE_METHOD = 'PLAINTEXT'
 
@@ -561,14 +561,14 @@ class Client(httplib2.Http):
 
         if not isinstance(headers, dict):
             headers = {}
+        if not isinstance(parameters, dict):
+            parameters = {}
 
         is_multipart = method == 'POST' and headers.get('Content-Type', 
             DEFAULT_CONTENT_TYPE) != DEFAULT_CONTENT_TYPE
 
         if body and method == "POST" and not is_multipart:
-            parameters = parse_qs(body)
-        else:
-            parameters = None
+            parameters = parameters.update(parse_qs(body))
 
         req = Request.from_consumer_and_token(self.consumer, 
             token=self.token, http_method=method, http_url=uri, 
@@ -589,7 +589,10 @@ class Client(httplib2.Http):
                 body = req.to_postdata()
                 
         elif method == "GET":
-            uri = req.to_url()
+            if force_header:
+                headers.update(req.to_header())
+            else:
+                uri = req.to_url()
         else:
             headers.update(req.to_header())
         
