@@ -79,7 +79,7 @@ def build_xoauth_string(url, consumer, token=None):
     params = []
     for k, v in sorted(request.iteritems()):
         if v is not None:
-            params.append('%s="%s"' % (k, escape(v)))
+            params.append('%s="%s"' % (k, escape(str(v))))
 
     return "%s %s %s" % ("GET", url, ','.join(params))
 
