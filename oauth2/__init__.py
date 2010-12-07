@@ -757,7 +757,7 @@ class SignatureMethod_HMAC_SHA1(SignatureMethod):
         except ImportError:
             import sha # Deprecated
         
-        hashed = hmac.new(key, raw, sha)
+        hashed = hmac.new(str(key), raw, sha)
 
         # Calculate the digest base 64.
         return binascii.b2a_base64(hashed.digest())[:-1]
